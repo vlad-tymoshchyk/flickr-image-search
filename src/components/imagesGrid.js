@@ -1,9 +1,11 @@
 import React from 'react';
 
-function ImagesGrid({ images }) {
+function ImagesGrid({ images, noResults }) {
   return (
-    <div class="container">
-        {
+    <div className="container">
+      { noResults ? (
+          <h1>There is no results on your query</h1>
+        ) : (
           images.map(({title, farm, server, id, secret}, i) => {
             const url = `http://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
             return (
@@ -13,7 +15,8 @@ function ImagesGrid({ images }) {
               </div>
             )
           })
-        }
+        )
+      }
     </div>
   );
 }

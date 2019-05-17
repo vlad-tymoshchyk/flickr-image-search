@@ -8,28 +8,27 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      images: []
+      images: [],
+      noResults: false
     }
     this.fetchImages = this.fetchImages.bind(this);
   }
   componentDidMount() {
     this.searcField = document.querySelector('#search-filed');
-
-    this.searcField.value = 'cats';
-    this.fetchImages({preventDefault: () => {}});
   }
   render() {
     return (
       <div className="App">
         <SearchField onSubmit={this.fetchImages}/>
-        <ImagesGrid images={this.state.images}/>
+        <ImagesGrid images={this.state.images} noResults={this.state.noResults}/>
       </div>
     );
   }
   fetchImages(e) {
     e.preventDefault();
-    const API_KEY = '6b3575d10435de5f010fc941f5eff94a';
     const TAGS = this.searcField.value;
+    if (TAGS.length === 0) return;
+    const API_KEY = '6b3575d10435de5f010fc941f5eff94a';
     const url = 'https://api.flickr.com/services/rest'
       + '?method=flickr.photos.search'
       + '&api_key=' + API_KEY
@@ -40,8 +39,7 @@ class App extends Component {
     fetch(url)
       .then((res) => res.json())
       .then(({ photos: { photo: images }}) => {
-        console.log(images);
-        this.setState(() => {return { images }});
+        this.setState(() => {return { images, noResults: !images.length }});
       })
       .catch((err) => {console.error('Error happened:', err)});
   }
